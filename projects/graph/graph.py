@@ -13,6 +13,7 @@ class Graph:
         """
         self.vertices[vertex] = set()
 
+
     def add_edge(self, v1, v2):
         """
         Add a directed edge to the graph.
@@ -22,6 +23,7 @@ class Graph:
         else:
             raise IndexError("That vertex does not exist")
 
+
     def bft(self, starting_vertex):
         """
         Print each vertex in breadth-first order
@@ -30,6 +32,7 @@ class Graph:
         visited = set()
         q = Queue()
         q.enqueue(starting_vertex)
+
         while q.size() > 0:
             v = q.dequeue()
             if v not in visited:
@@ -38,34 +41,101 @@ class Graph:
                 for neighbor in self.vertices[v]:
                     q.enqueue(neighbor)
 
-        pass  # TODO
+      
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        pass  # TODO
-    def dft_recursive(self, starting_vertex):
+        visited = set()
+        s = Stack()
+        s.push(starting_vertex)
+
+        while s.size() > 0:
+            v = s.pop()
+            if v not in visited:
+                visited.add(v)
+                print(v)
+                for neighbor in self.vertices[v]:
+                    s.push(neighbor)
+
+        
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
         This should be done using recursion.
         """
-        pass  # TODO
+        if visited is None:
+            visited = set()
+        
+        print(starting_vertex)
+        visited.add(starting_vertex)
+        # looping through children
+        for neighbor in self.vertices[starting_vertex]:
+            # setting base case
+            if neighbor not in visited:
+                self.dft_recursive(neighbor, visited)
+
+        
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
         starting_vertex to destination_vertex in
         breath-first order.
         """
-        pass  # TODO
+        # Create an empty set to store visited nodes
+        visited = set()
+        # Create an empty Queue & enqueue 
+        # A PATH TO the starting vertex
+        queue = Queue()
+        queue.enqueue([starting_vertex])
+
+        # While the queue is not empty
+        while queue.size() > 0:
+            # Dequeue the first PATH
+            path = queue.dequeue()
+            # Grab the vertex from the end of the path
+            vertex = path[-1]
+            # If that vertex has not been visited
+            if vertex not in visited:
+                # Mark it as visited
+                visited.add(vertex)
+                # If vertex is same as target, then return path
+                if vertex == destination_vertex:
+                    return path
+                # Then add a path to all of its neighbors to the back of the queue
+                for neighbor in self.vertices[vertex]:
+                    if neighbor not in visited:
+                        # Copy the path
+                        path_copy = path.copy()
+                        # Append neighbor to the back of the copy
+                        path_copy.append(neighbor)
+                        # Enqueue copy
+                        queue.enqueue(path_copy)
+
+
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        visited = set()
+        s = Stack()
+        s.push(starting_vertex)
+        path_list = []
+        while s.size() > 0:
+            v = s.pop()
+            if v == destination_vertex:
+                path_list.append(v)
+                return
+            if v not in visited:
+                visited.add(v)
+                path_list.append(v)
+                for neighbor in self.vertices[v]:
+                    s.push(neighbor)
+        print(path_list)
 
 
 
