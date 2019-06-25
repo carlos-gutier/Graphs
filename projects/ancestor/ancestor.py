@@ -34,7 +34,9 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        self.vertices[vertex] = set()
+        # make sure vertex is not overwritten
+        if vertex not in self.vertices:
+            self.vertices[vertex] = set()
         
     def add_edge(self, v1, v2):
         """
@@ -61,7 +63,6 @@ def earliest_ancestor(ancestors, starting_node):
         graph.add_vertex(pair[1])
         graph.add_edge(pair[1], pair[0])     
     # Create an empty Stack
-    print(graph)
     s = Stack()
     # Create a list of paths
     paths = []
@@ -92,10 +93,8 @@ def earliest_ancestor(ancestors, starting_node):
                 # add path_copy to paths to track all paths
                 paths.append(path_copy)
 
-    # Check for length of all paths
-    print(paths)    
+    # Check for length of all paths  
     path_lengths = [len(p) for p in paths]
-    # print(path_lengths)
     # Get longest path(s) in "paths"
     max_paths = [p for p in paths if len(p) == max(path_lengths)]
     # print(max_paths)
@@ -105,12 +104,12 @@ def earliest_ancestor(ancestors, starting_node):
         # and return lowest numeric ID
         earliest = min([p[-1] for p in max_paths])
         return earliest
+    elif len(max_paths) == 0:
+        return -1
     else:
         earliest = max_paths[0][-1]
         return earliest
-    # Earliest ancestor should be last vertex in longest_path
-    # return paths
 
 
-test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
-print(earliest_ancestor(test_ancestors, 6))
+# test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+# print(earliest_ancestor(test_ancestors, 6))
