@@ -25,9 +25,6 @@ class Stack():
         return len(self.stack)
 
 
-
-
-# Should be DFS - Using a Stack
 class Graph:
     """Represent a graph as a dictionary of vertices mapping labels to edges."""
     def __init__(self):
@@ -48,10 +45,72 @@ class Graph:
         else:
             raise IndexError("That vertex does not exist")
     
-    
-    def earliest_ancestor(ancestors, starting_node):
+# DFS???
+# Want to get all paths from starting node
+# then get the longest
+# if more than 1 path is max length
+# then check last vertex in each path
+# and return lowest numeric ID
+def earliest_ancestor(ancestors, starting_node):
+    # Build graph
+    graph = Graph()
+    # loop thorough tuple pairs from ancestors list
+    for pair in ancestors:
+        # add vertices and edges
+        graph.add_vertex(pair[0])
+        graph.add_vertex(pair[1])
+        graph.add_edge(pair[1], pair[0])     
     # Create an empty Stack
+    print(graph)
     s = Stack()
-    # Push starting node/vertex
-    s.push(starting_node)
-    
+    # Create a list of paths
+    paths = []
+    # Enqueue starting node/vertex
+    s.push([starting_node])
+    # Create empty visited set
+    visited = set()
+    # While the Queue is not empty
+    while s.size() > 0:
+        # Pop FIRST PATH
+        path = s.pop()
+        # Get VERTEX at END of PATH
+        v = path[-1]
+        # if vertex has not been visited
+        if v not in visited:
+            # add v to visited
+            visited.add(v)
+            # Loop through its ancestors
+            # print(graph.vertices)
+            for ancestor in graph.vertices[v]:
+                # print(ancestor)
+                # make a copy of path
+                path_copy = path.copy()
+                # add v's ancestor to path_copy
+                path_copy.append(ancestor)
+                # Push path_copy with added neighbor to paths
+                s.push(path_copy)
+                # add path_copy to paths to track all paths
+                paths.append(path_copy)
+
+    # Check for length of all paths
+    print(paths)    
+    path_lengths = [len(p) for p in paths]
+    # print(path_lengths)
+    # Get longest path(s) in "paths"
+    max_paths = [p for p in paths if len(p) == max(path_lengths)]
+    # print(max_paths)
+    # if more than 1 path equal to max length
+    if len(max_paths) > 1:
+        # then check last vertex in each path
+        # and return lowest numeric ID
+        earliest = min([p[-1] for p in max_paths])
+        return earliest
+    else:
+        earliest = max_paths[0][-1]
+        return earliest
+    # Earliest ancestor should be last vertex in longest_path
+    # return paths
+
+
+test_ancestors = [(1, 3), (2, 3), (3, 6), (5, 6), (5, 7), (4, 5), (4, 8), (8, 9), (11, 8), (10, 1)]
+print(earliest_ancestor(test_ancestors, 6))
